@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Back button in top left -->
+    <div class="fixed top-4 left-4 z-10">
+        <a href="/product_list/" class="inline-flex items-center text-gray-600 hover:text-gray-900">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back
+        </a>
+    </div>
+
+    <div class="flex flex-col lg:flex-row min-h-screen">
+        <!-- Left Section - Image Capture/Upload -->
+        <div class="w-full lg:w-1/2 p-4 sm:p-6 lg:p-8 border-b lg:border-b-0 lg:border-r border-gray-200 bg-white">
+            <div class="max-w-lg mx-auto">
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8">Visual Product Search</h1>
+
+                <!-- Camera Section -->
+                <div class="mb-6 sm:mb-8">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Camera Capture</h2>
+                    <div id="camera-controls" class="mb-4 flex flex-wrap gap-2">
+                        <button onclick="startCamera()" id="startCam" class="bg-blue-600 text-white px-4 sm:px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                            Start Camera
+                        </button>
+                        <button onclick="stopCamera()" id="stopCam" class="hidden bg-red-600 text-white px-4 sm:px-6 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+                            Stop Camera
+                        </button>
+                    </div>
+                    <video id="video" class="w-full border-2 border-gray-200 rounded-lg shadow-sm hidden" autoplay></video>
+                    <div id="capture-container" class="mt-4 hidden">
+                        <button onclick="captureImage()" class="bg-blue-600 text-white px-4 sm:px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                            Capture Photo
+                        </button>
+                    </div>
+                    <canvas id="canvas" class="hidden"></canvas>
+                </div>
+
+                <!-- Upload Section -->
+                <div class="mb-6 sm:mb-8">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Or Upload Image</h2>
+                    <div class="flex flex-col gap-4">
+                        <label class="w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm cursor-pointer hover:bg-gray-50 flex flex-col items-center">
+                            <span class="text-gray-600">Choose a file</span>
+                            <input type="file" id="upload" accept="image/*" class="hidden">
+                        </label>
+                        <div id="file-name" class="text-sm text-gray-600 text-center"></div>
+                    </div>
+                </div>
+
+                <!-- Preview Section -->
+                <div id="preview-container" class="hidden mb-6 sm:mb-8">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Preview</h2>
+                    <img id="preview-image" class="w-full rounded-lg shadow-sm" alt="Preview">
+                </div>
+
+                <!-- Search Button -->
+                <div class="text-center">
+                    <button onclick="uploadImage()" id="searchButton" class="w-full sm:w-auto bg-green-600 text-white px-6 sm:px-8 py-3 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                        Search Products
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section - Results -->
+        <div class="w-full lg:w-1/2 p-4 sm:p-6 lg:p-8 bg-gray-50 overflow-y-auto">
+            <div class="max-w-lg mx-auto">
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8">Search Results</h2>
+                
+                <!-- Loading Spinner -->
+                <div id="loading" class="hidden">
+                    <div class="flex items-center justify-center py-8">
+                        <div class="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-t-2 border-b-2 border-blue-600"></div>
+                    </div>
+                    <p class="text-center text-gray-600 mt-4">Searching for products...</p>
+                </div>
+                
+                <div id="results" class="space-y-4 sm:space-y-6"></div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    let capturedImage = null;
+    let stream = null;
+
+    // Show file name when file is selected
+    document.getElementById('upload').addEventListener('change', function(e) {
+        const fileName = e.target.files[0]?.name;
+        document.getElementById('file-name').textContent = fileName || '';
+        
+        // Show preview of uploaded file
+        if (e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                showPreview(e.target.result);
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+    // Start camera stream
+    function startCamera() {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(videoStream => {
+                stream = videoStream;
+                document.getElementById('video').srcObject = stream;
+                document.getElementById('video').classList.remove('hidden');
+                document.getElementById('capture-container').classList.remove('hidden');
+                document.getElementById('startCam').classList.add('hidden');
+                document.getElementById('stopCam').classList.remove('hidden');
+            })
+            .catch(err => {
+                console.error("Camera error:", err);
+                alert("Error accessing camera: " + err.message);
+            });
+    }
+
+    // Stop camera stream
+    function stopCamera() {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            document.getElementById('video').srcObject = null;
+            document.getElementById('video').classList.add('hidden');
+            document.getElementById('capture-container').classList.add('hidden');
+            document.getElementById('startCam').classList.remove('hidden');
+            document.getElementById('stopCam').classList.add('hidden');
+        }
+    }
+
+    // Show preview of image
+    function showPreview(imageUrl) {
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('preview-image');
+        previewImage.src = imageUrl;
+        previewContainer.classList.remove('hidden');
+    }
+
+    // Capture image from camera
+    function captureImage() {
+        let video = document.getElementById('video');
+        let canvas = document.getElementById('canvas');
+        let context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(blob => {
+            capturedImage = blob;
+            const imageUrl = URL.createObjectURL(blob);
+            showPreview(imageUrl);
+        }, 'image/jpeg');
+    }
+
+    // Upload and process image
+    function uploadImage() {
+        let fileInput = document.getElementById("upload");
+        let formData = new FormData();
+        let searchButton = document.getElementById("searchButton");
+        let loadingElement = document.getElementById("loading");
+        let resultsDiv = document.getElementById("results");
+    
+        if (fileInput.files.length > 0) {
+            formData.append("image", fileInput.files[0]);
+        } else if (capturedImage) {
+            formData.append("image", capturedImage);
+        } else {
+            alert("Please capture or upload an image.");
+            return;
+        }
+    
+        // Show loading state
+        searchButton.disabled = true;
+        searchButton.classList.add('opacity-50', 'cursor-not-allowed');
+        loadingElement.classList.remove('hidden');
+        resultsDiv.innerHTML = '';
+    
+        // Send to backend
+        fetch("/detect/", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Received data:", data);
+            
+            // Hide loading state
+            loadingElement.classList.add('hidden');
+            searchButton.disabled = false;
+            searchButton.classList.remove('opacity-50', 'cursor-not-allowed');
+        
+            // Clear previous results
+            resultsDiv.innerHTML = '';
+            
+            if (data.success && data.products && data.products.length > 0) {
+                // Split products into local and online
+                const localProducts = data.products.filter(p => p.source === 'database');
+                const onlineProducts = data.products.filter(p => p.source === 'api');
+                
+                // Create container for best price banner
+                const topBannerContainer = document.createElement('div');
+                resultsDiv.appendChild(topBannerContainer);
+                
+                // Create sections
+                let localSection = document.createElement('div');
+                let onlineSection = document.createElement('div');
+                
+                // Create section headings and content divs
+                localSection.innerHTML = `
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">In-Store Products</h3>
+                    <div class="local-products space-y-4"></div>
+                `;
+                
+                onlineSection.innerHTML = `
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Online Products</h3>
+                    <div class="online-products space-y-4"></div>
+                `;
+                
+                // Sort all products by price for lowest price banner
+                let allProductsForPrice = [];
+                
+                // Add Local Products
+                if (localProducts.length > 0) {
+                    // Sort local products by price
+                    localProducts.sort((a, b) => {
+                        let priceA = a.offerprice ? parseFloat(a.offerprice) : parseFloat(a.productprice || 0);
+                        let priceB = b.offerprice ? parseFloat(b.offerprice) : parseFloat(b.productprice || 0);
+                        return priceA - priceB;
+                    });
+                    
+                    // Add to price comparison array
+                    localProducts.forEach(p => {
+                        allProductsForPrice.push({
+                            name: p.productname,
+                            price: p.offerprice ? parseFloat(p.offerprice) : parseFloat(p.productprice),
+                            currency: '₹',
+                            source: 'In-Store',
+                            shop: p.shopname
+                        });
+                    });
+                    
+                    // Add section to results
+                    resultsDiv.appendChild(localSection);
+                    const localProductsContainer = localSection.querySelector('.local-products');
+                    
+                    localProducts.forEach(product => {
+                        const productURL = `/product/${product.prid}/add_to_wishlist/`;
+                        localProductsContainer.innerHTML += `
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+                                <div class="flex">
+                                    ${product.productimage ? 
+                                        `<div class="w-1/3">
+                                            <img src="${product.productimage}" alt="${product.productname}" 
+                                             class="w-full h-full object-cover" onerror="this.style.display='none'">
+                                         </div>` : ''}
+                                    <div class="w-2/3 p-4">
+                                        <h3 class="text-lg font-medium text-gray-900 mb-2">${product.productname}</h3>
+                                        <div class="space-y-1">
+                                            <p class="text-gray-500">MRP: <span class="line-through">₹${product.productprice}</span></p>
+                                            ${product.offerprice ? 
+                                                `<p class="text-lg font-bold text-green-600">₹${product.offerprice}</p>` : ''}
+                                            ${product.discountvalue ? 
+                                                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    ${product.discountvalue}% OFF
+                                                 </span>` : ''}
+                                        </div>
+                                        ${product.stock ? 
+                                            `<p class="mt-2 text-sm text-gray-500">Stock: ${product.stock}</p>` : ''}
+                                        <p class="mt-2 text-sm text-gray-600">${product.shopname}</p>
+                                        <a href="${productURL}" target="_blank" 
+                                            class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                                                View Product
+                                        </a>
+                                        ${product.similarity ? 
+                                            `<p class="mt-2 text-sm text-gray-500">Similarity: ${product.similarity}%</p>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    // Add empty local section
+                    resultsDiv.appendChild(localSection);
+                    const localProductsContainer = localSection.querySelector('.local-products');
+                    localProductsContainer.innerHTML = `
+                        <div class="text-center py-4">
+                            <p class="text-gray-500">No matching products found in store.</p>
+                        </div>
+                    `;
+                }
+                
+                // Add Online Products
+                if (onlineProducts.length > 0) {
+                    // Sort online products by price
+                    onlineProducts.sort((a, b) => {
+                        let priceA = parseFloat(a.price || 0);
+                        let priceB = parseFloat(b.price || 0);
+                        return priceA - priceB;
+                    });
+                    
+                    // Add to price comparison array
+                    onlineProducts.forEach(p => {
+                        allProductsForPrice.push({
+                            name: p.name,
+                            price: parseFloat(p.price || 0),
+                            currency: p.currency || '₹',
+                            source: 'Online',
+                            shop: p.store
+                        });
+                    });
+                    
+                    // Add section to results
+                    resultsDiv.appendChild(onlineSection);
+                    const onlineProductsContainer = onlineSection.querySelector('.online-products');
+                    
+                    onlineProducts.forEach(product => {
+                        onlineProductsContainer.innerHTML += `
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+                                <div class="flex">
+                                    ${product.image ? 
+                                        `<div class="w-1/3">
+                                            <img src="${product.image}" alt="${product.name}" 
+                                             class="w-full h-full object-cover" onerror="this.style.display='none'">
+                                         </div>` : ''}
+                                    <div class="w-2/3 p-4">
+                                        <h3 class="text-lg font-medium text-gray-900 mb-2">${product.name}</h3>
+                                        <p class="text-lg font-bold text-green-600">${product.currency} ${product.price}</p>
+                                        <p class="mt-2 text-sm text-gray-600">Store: ${product.store}</p>
+                                        ${product.url ? 
+                                            `<a href="${product.url}" target="_blank" 
+                                             class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                                                View Product
+                                             </a>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    // Add empty online section
+                    resultsDiv.appendChild(onlineSection);
+                    const onlineProductsContainer = onlineSection.querySelector('.online-products');
+                    onlineProductsContainer.innerHTML = `
+                        <div class="text-center py-4">
+                            <p class="text-gray-500">No matching products found online.</p>
+                        </div>
+                    `;
+                }
+                
+                // Add best price banner if we have any products
+                if (allProductsForPrice.length > 0) {
+                    allProductsForPrice.sort((a, b) => a.price - b.price);
+                    const lowestPriceProduct = allProductsForPrice[0];
+                    
+                    const bestPriceBanner = document.createElement('div');
+                    bestPriceBanner.className = 'bg-green-50 border-l-4 border-green-500 p-4 mb-6';
+                    bestPriceBanner.innerHTML = `
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V5z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-green-700">
+                                    <span class="font-medium">Best Price:</span> ${lowestPriceProduct.currency} ${lowestPriceProduct.price} for ${lowestPriceProduct.name}
+                                </p>
+                                <p class="mt-1 text-xs text-green-600">${lowestPriceProduct.source} at ${lowestPriceProduct.shop}</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Insert at the beginning of results
+                    topBannerContainer.appendChild(bestPriceBanner);
+                }
+                
+            } else {
+                // No products found
+                resultsDiv.innerHTML = `
+                    <div class="text-center py-8">
+                        <p class="text-gray-500">${data.error || 'No matching products found.'}</p>
+                    </div>
+                `;
+            }
+        })        
+        .catch(error => {
+            console.error("Error:", error);
+            loadingElement.classList.add('hidden');
+            searchButton.disabled = false;
+            searchButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            document.getElementById("results").innerHTML = `
+                <div class="text-center py-8">
+                    <p class="text-red-500">Error loading results: ${error.message}</p>
+                </div>
+            `;
+        });
+    }
+</script>
+
+</body>
+</html>

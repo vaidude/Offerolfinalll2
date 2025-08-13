@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<style>
+    .back-home {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    background: linear-gradient(45deg, #617dda, #103cb4);
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.back-home:hover {
+    background: linear-gradient(45deg, #103cb4, #617dda);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+</style>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <!-- Top Section with Background -->
+            <div class="relative h-48 bg-gradient-to-r from-blue-500 to-blue-600">
+                <div class="absolute -bottom-16 left-8">
+                    <img src="{{ shop.image.url }}" alt="{{ shop.shopname }}'s Image" 
+                         class="w-32 h-32 rounded-xl border-4 border-white shadow-lg object-cover">
+                </div>
+            </div>
+
+            <!-- Content Section -->
+            <div class="pt-20 px-8 pb-8">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800">{{ shop.shopname }}</h1>
+                        <p class="text-gray-600 mt-1">Store ID: {{ shop.storeid }}</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <a href="{% url 'shopeditprofile' %}" 
+                           class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-300">
+                            <i class="fas fa-edit mr-2"></i>
+                            Edit Profile
+                        </a>
+                        <a href="/shopdelprofile/{{shop.id}}/" 
+                           onclick="return confirm('Are you sure you want to delete your profile? This action cannot be undone.')"
+                           class="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition duration-300">
+                            <i class="fas fa-trash-alt mr-2"></i>
+                            Delete Profile
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 rounded-xl p-6 space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Contact Information</h2>
+                        
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-user text-blue-600 w-6"></i>
+                            <div>
+                                <p class="text-sm text-gray-500">Shop Owner</p>
+                                <p class="text-gray-800 font-medium">{{ shop.shopownername }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-blue-600 w-6"></i>
+                            <div>
+                                <p class="text-sm text-gray-500">Email Address</p>
+                                <p class="text-gray-800 font-medium">{{ shop.email }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-blue-600 w-6"></i>
+                            <div>
+                                <p class="text-sm text-gray-500">Phone Number</p>
+                                <p class="text-gray-800 font-medium">{{ shop.phone }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-xl p-6 space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Shop Details</h2>
+                        
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-store text-blue-600 w-6"></i>
+                            <div>
+                                <p class="text-sm text-gray-500">Shop Name</p>
+                                <p class="text-gray-800 font-medium">{{ shop.shopname }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-id-card text-blue-600 w-6"></i>
+                            <div>
+                                <p class="text-sm text-gray-500">Store ID</p>
+                                <p class="text-gray-800 font-medium">{{ shop.storeid }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-map-marker-alt text-blue-600 w-6"></i>
+                            <div>
+                                <p class="text-sm text-gray-500">Location</p>
+                                <p class="text-gray-800 font-medium">{{ shop.location }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="/seller_list/" class="back-home">Back to Home</a>
+
+    </div>
+</body>
+</html>

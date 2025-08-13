@@ -1,0 +1,80 @@
+{% extends 'nav.html' %}
+{% load static %}
+{% block content %}
+<script src="https://cdn.tailwindcss.com"></script>
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+    <div class="w-full max-w-lg bg-white shadow-lg rounded-lg p-6">
+        <h1 class="text-2xl font-bold text-center text-gray-900 mb-4">AI Poster Generator</h1>
+        
+        <form id="generate-form" method="POST" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="prompt" class="block text-sm font-medium text-gray-700">Enter Text Description</label>
+                <input type="text" id="prompt" name="prompt"
+                    class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="e.g., A paragone chappal" required>
+            </div>
+            <button type="submit"
+                class="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition">
+                Generate Poster
+            </button>
+        </form>
+
+        <div id="result" class="mt-6 hidden">
+            <h4 class="text-lg font-semibold text-gray-800">Generated Image:</h4>
+            <div class="mt-2 flex flex-col items-center">
+                <img id="generated-image" src="" alt="Generated Poster" class="w-full h-auto rounded-lg shadow-md">
+                <button id="download-btn"
+                    class="mt-4 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition hidden">
+                    Download Image
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById("generate-form");
+    const resultDiv = document.getElementById("result");
+    const generatedImage = document.getElementById("generated-image");
+    const downloadBtn = document.getElementById("download-btn");
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch("{% url 'generate_image' %}", {
+                method: "POST",
+                body: formData,
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                generatedImage.src = data.image_url;
+                resultDiv.classList.remove("hidden");
+                downloadBtn.classList.remove("hidden");
+            } else {
+                alert(data.error || "An error occurred.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again.");
+        }
+    });
+
+    // Function to download the image as PNG
+    function downloadImage() {
+        const imageUrl = generatedImage.src;
+        const link = document.createElement("a");
+        link.href = imageUrl;
+        link.download = "generated_poster.png"; // Downloaded file name
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Add click event listener to download button
+    downloadBtn.addEventListener("click", downloadImage);
+</script>
+{% endblock content %}

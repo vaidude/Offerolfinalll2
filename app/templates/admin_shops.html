@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Shop Approvals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Add custom styles for better aesthetics -->
+    <style>
+        .hover-scale {
+            transition: transform 0.2s ease-in-out;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        .shadow-hover {
+            transition: box-shadow 0.2s ease-in-out;
+        }
+        .shadow-hover:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-blue-50 to-purple-50 p-6">
+    <div class="max-w-6xl mx-auto bg-white p-8 shadow-2xl rounded-xl">
+        <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">Shop Approval Panel</h1>
+        
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                    <th class="px-6 py-4 text-left text-sm font-semibold uppercase">Shop Name</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold uppercase">Email</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold uppercase">Status</th>
+                    <th class="px-6 py-4 text-left text-sm font-semibold uppercase">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for shop in shops %}
+                <tr class="hover-scale shadow-hover bg-white hover:bg-gray-50 transition-all duration-200">
+                    <td class="px-6 py-4 border-b border-gray-200 text-gray-700">{{ shop.shopname }}</td>
+                    <td class="px-6 py-4 border-b border-gray-200 text-gray-700">{{ shop.email }}</td>
+                    <td class="px-6 py-4 border-b border-gray-200">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
+                            {% if shop.status == 'pending' %}bg-yellow-100 text-yellow-800{% else %}bg-green-100 text-green-800{% endif %}">
+                            {{ shop.status }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 border-b border-gray-200">
+                        {% if shop.status == "pending" %}
+                            <a href="{% url 'approve_shop' shop.id %}" 
+                               class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-all duration-200">
+                                Approve
+                            </a>
+                        {% else %}
+                            <span class="text-green-600 font-semibold">Approved</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

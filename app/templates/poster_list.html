@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Posters</title>
+</head>
+<body>
+    <h1>Uploaded Shop Posters</h1>
+
+    {% if shops %}
+        {% for poster in shops %}
+            <div style="border:1px solid #000; padding:10px; margin-bottom:10px;">
+                <h2>{{ poster.shop.shopname }}</h2>
+                <p>Owner: {{ poster.shop.shopownername }}</p>
+                <a href="{% url 'shop_products' shop_id=poster.shop.id %}">
+                    <img src="{{ poster.poster.url }}" alt="Shop Poster" width="200px">
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No posters uploaded yet.</p>
+    {% endif %}
+
+</body>
+</html>

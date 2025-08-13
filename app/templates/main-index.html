@@ -1,0 +1,402 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offroll - Modern Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- Swiper CSS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<!-- Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <style>
+     
+        .gradient-bg {
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 50%, #f6f6f6 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(255, 255, 255, 0.1);
+        }
+    </style>  
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-blue-900 fixed w-full z-50 shadow-lg" style="margin-top: -80px;">
+        <nav class="container mx-auto px-7 py-7 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold flex items-center space-x-2">
+                <img src="{% static 'images/offer.png' %}" class=" " alt="Logo" style="width: 100px; margin-top:-5px;">
+                <span></span>
+            </a>  
+            <div class="flex space-x-5">
+                <a href="/login/" class="hover:text-indigo-200 transition-colors">User Login</a>
+                <a href="/shoplogin/" class="hover:text-indigo-200 transition-colors">Shop Login</a>
+                <a href="/admin_login/" class="hover:text-indigo-200 transition-colors">Admin</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Carousel -->
+    <div class="swiper mt-20" >
+        <div class="swiper-wrapper">
+            <!-- Slide 1 -->
+            <div class="swiper-slide">
+                <div class="min-h-[509px] flex items-center justify-center relative bg-gradient-to-r from-indigo-500 to-purple-600">
+                    <!-- Image with full coverage and position adjustment -->
+                    <img src="{% static 'images/cartimage1.jpg' %}" alt="New Arrivals" class="w-full h-full object-fit absolute inset-0 z-0">
+            
+                    <!-- Content over the image -->
+                    <div class="text-center text-white space-y-2 px-5 z-10 relative">
+                        <div style="margin-left:725px;">
+                        <h1 class="text-5xl font-bold leading-tight">Welcome to Offroll</h1>
+                        <p class="text-xl leading-relaxed max-w-lg mx-auto">
+                            Discover Amazing Deals Every Day
+                        </p>
+                        <p class="text-xl leading-relaxed max-w-3xl mx-auto">
+                            Bringing you unbeatable offers and exclusive discounts on a wide range of products. From the latest tech gadgets to stylish fashion items and home essentials, we offer something for everyone. With fresh deals available daily, you'll always find new opportunities to save. Whether you're shopping for yourself or looking for the perfect gift, our daily deals ensure you get the best value without compromise. Don’t miss out – check in every day for new and exciting offers!
+                        </p>
+                        <a href="/login/" class="inline-block bg-white text-indigo-600 px-8 py-3 rounded-full font-semibold hover:bg-indigo-200 transition duration-300 ease-in-out transform hover:scale-105">
+                            Shop Now
+                        </a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 2 -->
+            <div class="swiper-slide">
+                <div class="min-h-[500px] flex items-center justify-center  bg-gradient-to-r from-pink-500 to-rose-600">
+                    <img src="{% static 'images/cartimage.jpg' %}" alt="New Arrivals" class="w-full h-full object-fit">
+                    <div class="text-center text-white space-y-6 px-4">
+                        <h2 class="text-5xl font-bold">New Arrivals</h2>
+                        <p class="text-xl">Explore the Latest Trends</p>
+                        <a href="/login/" class="inline-block bg-white text-pink-600 px-8 py-3 rounded-full font-semibold hover:bg-opacity-90 transition">Discover</a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <script>
+        var swiper = new Swiper('.swiper', {
+          loop: true,             // Enables looping of slides (infinite scroll)
+          autoplay: {
+            delay: 2000,          // Autoplay delay in milliseconds (2 seconds)
+            disableOnInteraction: false, // Keeps autoplay even if user interacts with the swiper
+          },
+          speed: 1000,            // Slide transition speed in milliseconds (1 second)
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,      // Makes the pagination dots clickable
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      </script>
+
+
+
+      <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 1000,  // Animation duration
+        easing: 'ease-in-out',  // Animation easing
+        once: true,  // Animation only happens once
+    });
+</script>
+<section id="about" class="container mx-auto px-6 py-20 flex items-center justify-between space-x-10">
+    <!-- Image Section -->
+    <div class="w-full md:w-1/2" data-aos="fade-right">
+        <img src="{% static 'images/aboutimage.jpg' %}" alt="Offroll" class="w-full h-full object-cover rounded-lg shadow-lg">
+    </div>
+    
+    <!-- Content Section -->
+    <div class="w-full md:w-1/2 text-center md:text-left" data-aos="fade-left">
+        <h2 class="text-4xl font-bold text-gray-800 mb-6">About Offroll</h2>
+        <p class="text-xl text-gray-600 mb-6">
+            Offroll is your one-stop destination for unbeatable deals on a wide range of products. We offer daily exclusive discounts across tech gadgets, home essentials, fashion items, and more. Our goal is to make shopping exciting, affordable, and hassle-free. 
+        </p>
+        <p class="text-lg text-gray-600 mb-6">
+            With fresh deals coming in every day, you’ll never miss a chance to grab the latest products at the best prices. Whether you're looking for something for yourself or searching for the perfect gift, Offroll ensures you'll find what you're looking for at an irresistible price.
+        </p>
+        <a href="#products" class="inline-block bg-indigo-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-indigo-700 transition">
+            Explore Our Deals
+        </a>
+    </div>
+</section>
+
+
+      
+
+    <!-- Featured Shops -->
+    <section class="container mx-auto px-6 py-16">
+        <h2 class="text-4xl font-bold text-center mb-12">Featured Shops</h2>
+        <div class="swiper shops-swiper">
+            <div class="swiper-wrapper">
+                {% for shop in shops %}
+                <div class="swiper-slide">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden flex items-center space-x-6 transition-transform duration-500 hover:scale-105">
+                        <!-- Shop Image Section (Left) -->
+                        <div class="w-1/3 h-48 bg-gray-100">
+                            {% if shop.image %}
+                            <img src="{{ shop.image.url }}" class="w-full h-full object-cover" alt="{{ shop.shopname }}">
+                            {% else %}
+                            <div class="w-full h-full flex items-center justify-center bg-gray-200">
+                                <span class="text-gray-500">No Image</span>
+                            </div>
+                            {% endif %}
+                        </div>
+    
+                        <!-- Shop Details Section (Right) -->
+                        <div class="p-6 w-2/3">
+                            <h3 class="text-xl font-semibold mb-2">{{ shop.shopname }}</h3>
+                            <p class="text-gray-600 mb-4">{{ shop.location }}</p>
+                            <a href="/login/" class="text-indigo-600 font-medium hover:text-indigo-800 transition-colors">
+                                View Products →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- Swiper Navigation Buttons -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </section>
+    
+
+    <script>
+        var swiper = new Swiper('.shops-swiper', {
+          loop: true,             // Enables the loop for continuous sliding
+          autoplay: {
+            delay: 3000,          // Slide interval in milliseconds (3 seconds)
+            disableOnInteraction: false, // Keeps autoplay active even when interacting
+          },
+          speed: 1500,            // Transition speed in milliseconds (1.5 seconds)
+          slidesPerView: 'auto',  // Adjusts the number of visible slides based on content
+          spaceBetween: 20,       // Space between slides
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+          breakpoints: {
+            // Make adjustments for smaller screens (optional)
+            640: {
+              slidesPerView: 1,    // 1 slide per view on small screens
+              spaceBetween: 10,
+            },
+            1024: {
+              slidesPerView: 3,    // 3 slides per view on larger screens
+              spaceBetween: 20,
+            }
+          }
+        });
+      </script>
+      
+
+
+
+
+
+    <!-- Products Grid -->
+    <section id="products" class="container mx-auto px-6 py-16">
+        <h2 class="text-4xl font-bold text-center mb-12">Featured Products</h2>
+    
+        <!-- Swiper Container for Products -->
+        <div class="swiper products-swiper">
+            <div class="swiper-wrapper">
+                {% for product in products %}
+                <div class="swiper-slide">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover transform transition-all duration-300 hover:scale-105">
+                        <!-- Product Layout: Image on the Left and Content on the Right -->
+                        <div class="flex">
+                            <!-- Product Image Section (Left Side) -->
+                            <div class="w-1/3 bg-gray-100">
+                                <img src="{{ product.productimage.url }}" class="w-full h-full object-cover" alt="{{ product.productname }}">
+                            </div>
+    
+                            <!-- Product Details Section (Right Side) -->
+                            <div class="w-2/3 p-4 space-y-3">
+                                <!-- Product Name -->
+                                <h3 class="text-lg font-semibold mb-1 text-gray-800">{{ product.productname }}</h3>
+    
+                                <!-- Price Section -->
+                                <div class="flex flex-col justify-between items-center mb-2">
+                                    <div class="text-center">
+                                        <span class="text-xl font-bold text-indigo-600">₹{{ product.offerprice }}</span>
+                                        <!-- Display "MRP" label when there's a discount -->
+                                        {% if product.productprice > product.offerprice %}
+                                        <span class="text-sm text-gray-500 line-through ml-2">MRP ₹{{ product.productprice }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <!-- Discount Badge for better visibility -->
+                                    {% if product.productprice > product.offerprice %}
+                                    <div class="mt-2 bg-red-500 text-white text-sm px-3 py-1 rounded-full">
+                                        <span>Discount</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+    
+                                <!-- View Details Button -->
+                                <a href="/login/" class="block w-full bg-indigo-600 text-white text-center py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+    
+            <!-- Swiper Navigation (optional) -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    
+    </section>
+    
+    
+    <script>
+        var swiper = new Swiper('.products-swiper', {
+          loop: true,             // Enables the loop for continuous sliding
+          autoplay: {
+            delay: 3000,          // Slide interval in milliseconds (3 seconds)
+            disableOnInteraction: false, // Keeps autoplay active even when interacting
+          },
+          speed: 1500,            // Transition speed in milliseconds (1.5 seconds)
+          slidesPerView: 3,       // Show 3 slides per view (adjust for small cards)
+          spaceBetween: 20,       // Space between slides for a better layout
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+          breakpoints: {
+            640: {
+              slidesPerView: 1,    // 1 slide per view on small screens
+              spaceBetween: 10,
+            },
+            1024: {
+              slidesPerView: 3,    // 3 slides per view on larger screens
+              spaceBetween: 20,
+            }
+          }
+        });
+      </script>
+      
+
+    <!-- Footer -->
+    <footer id="footer" class="overflow-hidden">
+        <div class="container">
+          <div class="row">
+            <div class="footer-top-area">
+              <div class="row d-flex flex-wrap justify-content-between">
+                <div class="col-lg-3 col-sm-6 pb-1">
+                  <div class="footer-menu">
+                    <img src="{% static 'images/offer.png' %}" style="height: auto; width: 150px; margin-top:85px;" alt="logo">
+  
+  
+                
+                  </div>
+                </div>
+                <div class="col-lg-2 col-sm-6 pb-4">
+                  <div class="footer-menu text-uppercase">
+                    <h5 class="widget-title pb-2">Quick Links</h5>
+                    <ul class="menu-list list-unstyled text-uppercase">
+                      <li class="menu-item pb-2">
+                        <a href="/product_list/">Home</a>
+                      </li>
+                      <li class="menu-item pb-2">
+                        <a href="/login/">Wishlist</a>
+                      </li>
+                      <li class="menu-item pb-2">
+                        <a href="/login/">Product compare</a>
+                      </li>
+                      <li class="menu-item pb-2">
+                        <a href="/login/">recommend Product</a>
+                      </li>
+                      <li class="menu-item pb-2">
+                        <a href="#">Contact</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div class="col-lg-3 col-sm-6 pb-3">
+                  <div class="footer-menu contact-item">
+                    <h5 class="widget-title text-uppercase pb-2">Contact Us</h5>
+                    <p>Do you have any queries or suggestions? <a href="mailto:">info@offerroll.com</a>
+                    </p>
+                    <p>If you need support? Just give us a call. <a href="">+91 989486522</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+      </footer>
+      <div id="footer-bottom">
+        <div class="container-fluid text-center">
+         
+                
+                  © 2025 Offroll. All rights reserved.
+             
+           
+        </div>
+      </div>
+    
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Initialize Swiper
+        const swiper = new Swiper('.swiper', {
+            loop: true,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            autoplay: {
+                delay: 5000,
+            },
+        });
+
+        const shopSwiper = new Swiper('.shops-swiper', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                640: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 },
+                1280: { slidesPerView: 4 }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+    <style>
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .product-image {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+        }
+        .product-price {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .offer-price {
+            color: #dc3545;
+            font-weight: bold;
+            text-decoration: line-through;
+        }
+        .product-name {
+            font-size: 1.2em;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        .discount-value {
+            color: #ffc107;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Product List</h1>
+        <div class="row">
+            {% for item in prd %}
+                <div class="col-md-4 mb-4">
+                    <div class="product-card">
+                        <!-- Product Image -->
+                        {% if item.productimage %}
+                            <img src="{{ item.productimage.url }}" alt="{{ item.productname }}" class="product-image">
+                        {% else %}
+                            <img src="https://via.placeholder.com/150" alt="No image available" class="product-image">
+                        {% endif %}
+                        
+                        <!-- Product Name -->
+                        <div class="product-name">{{ item.productname }}</div>
+                        
+                        <!-- Product Price -->
+                        {% if item.offerprice %}
+                            <div class="offer-price">₹ {{ item.offerprice }}</div>
+                            <div class="product-price">₹ {{ item.productprice }}</div>
+                        {% else %}
+                            <div class="product-price">₹ {{ item.productprice }}</div>
+                        {% endif %}
+                        
+                        <!-- Discount (if available) -->
+                        {% if item.discountvalue %}
+                            <div class="discount-value">Discount: {{ item.discountvalue }}%</div>
+                        {% endif %}
+                        
+                        <!-- Stock Information -->
+                        <div class="mt-2">Stock Available: {{ item.stock }}</div>
+
+                        <!-- Shop Name -->
+                        <div class="mt-2">Shop: {{ item.shopname.shopname }}</div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No products available.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (Optional) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0-alpha1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<div class="container">
+    {% if user.is_authenticated %}
+        <h1>Welcome, {{ user.name }}!</h1>
+        <h2>Personalized Recommendations:</h2>
+        <ul>
+            {% for item in recommendations %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        
+    {% endif %}
+</div>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto py-12 px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Profile Card -->
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <!-- Profile Header -->
+                <div class="relative h-48 bg-gradient-to-r from-blue-500 to-purple-600">
+                    <div class="absolute -bottom-20 left-1/2 transform -translate-x-1/2">
+                        <div class="relative">
+                            {% if usr.image %}
+                                <img src="{{ usr.image.url }}" alt="Profile Image" 
+                                     class="w-40 h-40 rounded-full border-4 border-white shadow-lg object-cover">
+                            {% else %}
+                                <img src="https://via.placeholder.com/150" alt="Default Profile Image" 
+                                     class="w-40 h-40 rounded-full border-4 border-white shadow-lg object-cover">
+                            {% endif %}
+                            <a href="{% url 'editprofile' %}" 
+                               class="absolute bottom-2 right-2 bg-white text-blue-600 rounded-full p-2 shadow-lg hover:bg-blue-50 transition-all duration-300 border-2 border-blue-600">
+                                <i class="fas fa-pencil-alt w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Content -->
+                <div class="pt-24 pb-8 px-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800">{{ usr.name }}</h2>
+                        <p class="text-gray-600 mt-2 flex items-center justify-center">
+                            <i class="fas fa-envelope mr-2"></i>
+                            {{ usr.email }}
+                        </p>
+                    </div>
+
+                    <!-- Profile Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-gray-50 rounded-xl p-4 text-center">
+                            <i class="fas fa-phone-alt text-blue-600 mb-2"></i>
+                            <p class="text-gray-600 text-sm">Phone</p>
+                            <p class="text-gray-800 font-medium">{{ usr.phone }}</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-4 text-center">
+                            <i class="fas fa-venus-mars text-blue-600 mb-2"></i>
+                            <p class="text-gray-600 text-sm">Gender</p>
+                            <p class="text-gray-800 font-medium">{{ usr.get_gender_display }}</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl p-4 text-center">
+                            <i class="fas fa-birthday-cake text-blue-600 mb-2"></i>
+                            <p class="text-gray-600 text-sm">Age</p>
+                            <p class="text-gray-800 font-medium">{{ usr.age }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-center">
+                        <a href="/delprofile/{{ usr.id }}/" 
+                           class="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-300 shadow-md">
+                            <i class="fas fa-trash-alt mr-2"></i>
+                            Delete Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

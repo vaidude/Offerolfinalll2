@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-72 bg-gradient-to-b from-blue-700 to-blue-900 text-white shadow-lg">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-center">Admin Panel</h1>
+                <p class="text-sm text-center mt-1">Manage Users & Shops</p>
+            </div>
+            <nav class="mt-10 space-y-4">
+                <a href="/aduser/" class="flex items-center space-x-3 py-3 px-6 hover:bg-blue-800 rounded-lg transition-all">
+                    <i class="fas fa-users text-xl"></i>
+                    <span>User Profiles</span>
+                </a>
+                <a href="/adshop/" class="flex items-center space-x-3 py-3 px-6 hover:bg-blue-800 rounded-lg transition-all">
+                    <i class="fas fa-id-badge text-xl"></i>
+                    <span>Shop Profiles</span>
+                </a>
+                <a href="/admin_shops/" class="flex items-center space-x-3 py-3 px-6 hover:bg-red-600 rounded-lg transition-all">
+                    <i class="fas fa-sign-out-alt text-xl"></i>
+                    <span>Shops</span>
+                </a>
+                <a href="/logout/" class="flex items-center space-x-3 py-3 px-6 hover:bg-red-600 rounded-lg transition-all">
+                    <i class="fas fa-sign-out-alt text-xl"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-10">
+            <header class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Welcome, Admin!</h2>
+                <p class="text-gray-600">Get started by managing users, shops, and more.</p>
+            </header>
+
+            <!-- Dashboard Cards -->
+            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <a href="/aduser/" class="bg-blue-600 text-white p-6 rounded-lg shadow-lg hover:bg-blue-700 transition transform hover:scale-105">
+                    <div class="flex items-center space-x-4">
+                        <i class="fas fa-users text-4xl"></i>
+                        <div>
+                            <h3 class="text-2xl font-bold">User Profiles</h3>
+                            <p class="text-sm mt-1">Manage user details and profiles.</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 2 -->
+                <a href="/adshop/" class="bg-green-600 text-white p-6 rounded-lg shadow-lg hover:bg-green-700 transition transform hover:scale-105">
+                    <div class="flex items-center space-x-4">
+                        <i class="fas fa-id-badge text-4xl"></i>
+                        <div>
+                            <h3 class="text-2xl font-bold">Shop Profiles</h3>
+                            <p class="text-sm mt-1">Manage shops profiles.</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 3 -->
+                <a href="/admin_shops/" class="bg-red-600 text-white p-6 rounded-lg shadow-lg hover:bg-red-700 transition transform hover:scale-105">
+                    <div class="flex items-center space-x-4">
+                        <i class="fas fa-sign-out-alt text-4xl"></i>
+                        <div>
+                            <h3 class="text-2xl font-bold">Shops</h3>
+                            <p class="text-sm mt-1">Manage shops profiles.</p>
+                        </div>
+                    </div>
+                </a>
+            </section>
+
+            <!-- Information Section -->
+            <section class="mt-10">
+                <h3 class="text-2xl font-semibold text-gray-800">How to Get Started</h3>
+                <p class="text-gray-600 mt-2">
+                    Use the options on the sidebar to manage users, shops, or log out. Each card above provides shortcuts to the most used features.
+                </p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

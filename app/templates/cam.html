@@ -1,0 +1,253 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture Image</title>
+</head>
+<body>
+    <h2>Capture or Upload an Image</h2>
+
+    <!-- Display Camera -->
+    <video id="video" width="320" height="240" autoplay></video>
+    <button id="capture">Capture Image</button>
+    <canvas id="canvas" width="320" height="240"></canvas>
+    <br>
+    <input type="file" id="imageInput">
+    <button id="submit">Submit Image</button>
+    <p id="result"></p>
+
+    <script>
+        const video = document.getElementById("video");
+        const canvas = document.getElementById("canvas");
+        const captureButton = document.getElementById("capture");
+        const submitButton = document.getElementById("submit");
+        const inputFile = document.getElementById("imageInput");
+        const resultText = document.getElementById("result");
+        const context = canvas.getContext("2d");
+
+        // Start the camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => { video.srcObject = stream; })
+            .catch(err => console.error("Error accessing camera:", err));
+
+        // Capture an image
+        captureButton.addEventListener("click", () => {
+            context.drawImage(video, 0, 0, 320, 240);
+        });
+
+        // Submit captured image or uploaded image
+        submitButton.addEventListener("click", () => {
+            let formData = new FormData();
+
+            if (inputFile.files.length > 0) {
+                formData.append("image", inputFile.files[0]);
+            } else {
+                canvas.toBlob(blob => {
+                    formData.append("image", blob, "captured_image.jpg");
+
+                    fetch("/detect/", { method: "POST", body: formData })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.product_data) {
+                                resultText.innerHTML = `Product Found!<br>Name: ${data.product_data.name}<br>Price: $${data.product_data.price}<br>Offer Price: $${data.product_data.offer_price}<br>Stock: ${data.product_data.stock}<br><img src="${data.product_data.image_url}" alt="Product Image" width="100">`;
+                            } else {
+                                resultText.innerText = "Error: " + data.error;
+                            }
+                        })
+                        .catch(error => console.error("Error:", error));
+                }, "image/jpeg");
+            }
+        });
+    </script>
+</body>
+</html> {% endcomment %}
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Access</title>
+    <style>
+        #video {
+            width: 100%;
+            max-width: 600px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Camera Access</h1>
+    <div>
+        <video id="video" autoplay></video>
+    </div>
+    <script>
+        // Access the camera
+        const video = document.getElementById('video');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                video.srcObject = stream;
+            })
+            .catch((error) => {
+                console.error("Error accessing the camera:", error);
+                alert("Unable to access the camera. Please check your browser permissions.");
+            });
+    </script>
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Access</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .camera-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        #video {
+            width: 100%;
+            border-radius: 15px;
+            display: block;
+            transform: scaleX(-1); /* Mirror effect */
+        }
+
+        .camera-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border: 3px solid rgba(255,255,255,0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 0 2000px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .camera-overlay::before {
+            content: '';
+            width: 90%;
+            height: 90%;
+            border: 2px solid rgba(255,255,255,0.6);
+            border-radius: 50%;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 10px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .camera-container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Camera Access</h1>
+    <div class="camera-container">
+        <video id="video" autoplay playsinline></video>
+        <div class="camera-overlay"></div>
+    </div>
+    <div class="error-message" id="error-message">
+        Unable to access the camera. Please check your browser permissions.
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const errorMessage = document.getElementById('error-message');
+
+        // Access the camera with preferred settings
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: 'user',
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            }
+        })
+        .then((stream) => {
+            video.srcObject = stream;
+            errorMessage.style.display = 'none';
+        })
+        .catch((error) => {
+            console.error("Error accessing the camera:", error);
+            errorMessage.style.display = 'block';
+        });
+
+        // Handle visibility change to properly manage camera resources
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Stop all tracks when page is hidden
+                if (video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                }
+            } else {
+                // Restart camera when page becomes visible again
+                navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'user',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                })
+                .then((stream) => {
+                    video.srcObject = stream;
+                })
+                .catch((error) => {
+                    console.error("Error accessing the camera:", error);
+                    errorMessage.style.display = 'block';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
